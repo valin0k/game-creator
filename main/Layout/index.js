@@ -41,7 +41,8 @@ export default observer(function ({ children }) {
           H1.logo
             Span.logoText(size='xl')= APP_NAME
         ScrollView.body
-          Div.content
-            = children
+          Div.contentWrapper
+            Div.content
+              = children
   `
 })

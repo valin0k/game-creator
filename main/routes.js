@@ -14,6 +14,12 @@ export default (components = {}) => [
     filters: [isNotLoggedIn]
   },
   {
+    path: '/addcard',
+    exact: true,
+    component: components.PAddCard,
+    filters: [isLoggedIn]
+  },
+  {
     path: '/about',
     exact: true,
     component: components.PAbout,
