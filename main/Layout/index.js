@@ -37,9 +37,9 @@ export default observer(function ({ children }) {
         renderContent=renderSidebar
       )
         Row.menu
-          Button(color='secondaryText' icon=faBars onPress=() => $opened.set(!opened))
+          Button(icon=faBars onPress=() => $opened.set(!opened))
           H1.logo
-            Span.logoText(size='xl')= APP_NAME
+            Span.logoText= APP_NAME
         ScrollView.body
           Div.contentWrapper
             Div.content

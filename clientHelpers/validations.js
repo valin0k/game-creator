@@ -3,7 +3,7 @@ export const numberValidation = (val) => {
   return val && Number(val) === parseInt(val)
 }
 
-export const notEmptyValidation = (val) => {
+export const notEmptyValidation = (val = '') => {
   const trimmedVal = val.trim()
   return !!trimmedVal
 }
