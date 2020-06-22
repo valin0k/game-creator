@@ -20,11 +20,9 @@ export default observer(function PAddCard () {
     name: '',
     description: '',
     roundsCount: '',
-    roles: [],
+    roles: [''],
     questions: [{...NEW_QUESTION}]
   })
-  // const [questions, $questions] = useValue([{...NEW_QUESTION}])
-  const [errors, $errors] = useValue({})
 
   async function onSubmit() {
     $showErrors.set(true)
@@ -76,6 +74,22 @@ export default observer(function PAddCard () {
             onChangeText=(text) => $data.set('roundsCount', text)
             keyboardType='numeric'
           )
+
+        Div.subform
+          Div.titleWrapper
+            Span.title Roles
+            Button.button(onPress=() => $data.push('roles', '')) +
+          Div.roles
+            each role, i in data.roles
+              InputWrapper(
+                showError=showErrors && !notEmptyValidation(role)
+                label='Player role'
+                errorMessage='Player role can not be empty'
+              )
+                TextInput(
+                  value=role
+                  onChangeText=(text) => $data.set('roles.' + i, text)
+                )
           
         Div.subform
           Div.titleWrapper
