@@ -3,6 +3,7 @@ import { observer, useSession, useValue, $root } from 'startupjs'
 import { Div, Button, TextInput, Span } from '@startupjs/ui'
 import { InputWrapper } from 'components'
 import { numberValidation, notEmptyValidation } from 'clientHelpers/validations'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import Question from './Question'
 import './index.styl'
 
@@ -89,6 +90,9 @@ export default observer(function PAddCard () {
                 TextInput(
                   value=role
                   onChangeText=(text) => $data.set('roles.' + i, text)
+                  onIconPress=() => data.roles.length > 1 && $data.del('roles.' + i)
+                  iconPosition='right'
+                  icon=faTimesCircle
                 )
           
         Div.subform
