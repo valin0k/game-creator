@@ -1,14 +1,17 @@
 import React from 'react'
 import { observer } from 'startupjs'
-import { Div, TextInput, Span, Checkbox } from '@startupjs/ui'
+import { Div, TextInput, Span, Checkbox, Button } from '@startupjs/ui'
 import { InputWrapper } from 'components'
 import { notEmptyValidation } from 'clientHelpers/validations'
 import './index.styl'
 
-export default observer(function Question ({ onChange, title, group, formula, showErrors }) {
-  console.info("__showErrors__", showErrors)
+export default observer(function Question ({ onChange, title, group, formula, showErrors, onRemove, canRemove }) {
   return pug`
     Div.root
+      Div.titleWrapper
+        Span.title Question
+        if canRemove
+          Button.button(onPress=onRemove) x
       InputWrapper(
         showError=showErrors && !notEmptyValidation(title)
         label='Title'

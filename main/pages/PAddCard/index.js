@@ -3,8 +3,14 @@ import { observer, useSession, useValue, $root } from 'startupjs'
 import { Div, Button, TextInput, Span } from '@startupjs/ui'
 import { InputWrapper } from 'components'
 import { numberValidation, notEmptyValidation } from 'clientHelpers/validations'
-import Questions from './Questions'
+import Question from './Question'
 import './index.styl'
+
+const NEW_QUESTION = {
+  title: '',
+  group: true,
+  formula: ''
+}
 
 export default observer(function PAddCard () {
   const [userId, $userId] = useSession('userId')
@@ -15,24 +21,27 @@ export default observer(function PAddCard () {
     description: '',
     roundsCount: '',
     roles: [],
-    questions: []
+    questions: [{...NEW_QUESTION}]
   })
+  // const [questions, $questions] = useValue([{...NEW_QUESTION}])
   const [errors, $errors] = useValue({})
 
   async function onSubmit() {
     $showErrors.set(true)
 
-    return
-    await $root.scope('users').addUser({name: trimmedName, id: userId })
   }
-  //
-  // function onChangeText(value, field) {
-  //   console.info("__field__", field)
-  //   console.info("__value__", value)
-  //   $data.set(field, value)
-  //
-  //   console.info("__data__", data)
-  // }
+
+  function onChangeQuestion(i, field, value) {
+    $data.set('questions.' + i + '.' + field, value)
+  }
+
+  async function onAddQuestion() {
+    $data.push('questions', {...NEW_QUESTION})
+  }
+
+  function onRemoveQuestion(i) {
+    $data.del('questions.' + i)
+  }
 
   return pug`
     Div.root
@@ -67,8 +76,22 @@ export default observer(function PAddCard () {
             onChangeText=(text) => $data.set('roundsCount', text)
             keyboardType='numeric'
           )
-        Questions(showErrors=showErrors)
           
+        Div.subform
+          Div.titleWrapper
+            Span.title Questions
+            Button.button(onPress=onAddQuestion) +
+          Div.questions
+            each question, i in data.questions
+              Question(
+                key=i 
+                onChange=(field, value) => onChangeQuestion(i, field, value) 
+                showErrors=showErrors
+                onRemove=() => onRemoveQuestion(i)
+                canRemove=data.questions.length > 1
+                ...question
+              )
+
         Button.button(onPress=onSubmit color='primary' variant='flat') Create
   `
 })
