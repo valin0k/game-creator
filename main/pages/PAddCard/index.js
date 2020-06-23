@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer, useSession, useValue, $root, emit } from 'startupjs'
 import { Div, Button, TextInput, Span } from '@startupjs/ui'
-import { InputWrapper } from 'components'
+import { InputWrapper, BackButton } from 'components'
 import { numberValidation, notEmptyValidation } from 'clientHelpers/validations'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import Question from './Question'
@@ -68,7 +68,9 @@ export default observer(function PAddCard () {
 
   return pug`
     Div.root
-      Span.title Form for create a new card type
+      Div.titleWrapper
+        BackButton
+        Span.title Form for create a new card type
       Div.form
         InputWrapper(
           showError=showErrors && !notEmptyValidation(data.name)
