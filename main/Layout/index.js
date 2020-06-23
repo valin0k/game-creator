@@ -43,6 +43,7 @@ export default observer(function ({ children }) {
         ScrollView.body
           Div.contentWrapper
             Div.content
-              = children
+              Div.contentBg
+                = children
   `
 })

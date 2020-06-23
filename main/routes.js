@@ -20,6 +20,12 @@ export default (components = {}) => [
     filters: [isLoggedIn]
   },
   {
+    path: '/addgame',
+    exact: true,
+    component: components.PAddGame,
+    filters: [isLoggedIn]
+  },
+  {
     path: '/about',
     exact: true,
     component: components.PAbout,

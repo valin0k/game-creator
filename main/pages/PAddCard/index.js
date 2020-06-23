@@ -17,7 +17,6 @@ export default observer(function PAddCard () {
   const [userId, $userId] = useSession('userId')
 
   const [showErrors, $showErrors] = useValue()
-  const [validated, $validated] = useValue(false)
   const [data, $data] = useValue({
     name: '',
     description: '',

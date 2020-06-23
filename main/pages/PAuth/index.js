@@ -1,5 +1,5 @@
 import React from 'react'
-import { observer, useSession, useValue, $root } from 'startupjs'
+import { observer, useSession, useValue, $root, emit } from 'startupjs'
 import { Div, Button, TextInput, Span } from '@startupjs/ui'
 import './index.styl'
 
@@ -11,6 +11,7 @@ export default observer(function PAuth () {
     const trimmedName = nameValue.trim()
     if(!trimmedName) return
     await $root.scope('users').addUser({name: trimmedName, id: userId })
+    emit('url', '/')
   }
 
   function onChangeText(value) {
