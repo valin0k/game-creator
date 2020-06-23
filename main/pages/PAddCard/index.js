@@ -17,6 +17,7 @@ export default observer(function PAddCard () {
   const [userId, $userId] = useSession('userId')
 
   const [showErrors, $showErrors] = useValue()
+  const [validated, $validated] = useValue(false)
   const [data, $data] = useValue({
     name: '',
     description: '',
@@ -25,8 +26,31 @@ export default observer(function PAddCard () {
     questions: [{...NEW_QUESTION}]
   })
 
+  function getFlatData () {
+    const flatArray = [
+      data.name,
+      data.description,
+      data.roundsCount,
+      ...data.roles,
+    ]
+
+    data.questions.forEach(question => {
+      flatArray.push(question.title)
+      flatArray.push(question.formula)
+    })
+    return flatArray
+  }
+
+  function validation() {
+    const flatArray = getFlatData()
+    return flatArray.every((item) => notEmptyValidation(item))
+  }
+
   async function onSubmit() {
-    $showErrors.set(true)
+    !showErrors && $showErrors.set(true)
+
+    const a = validation()
+
 
   }
 
@@ -67,8 +91,8 @@ export default observer(function PAddCard () {
           )
         InputWrapper(
           showError=showErrors && !numberValidation(data.roundsCount)
-          label='Description'
-          errorMessage='Card description can not be empty'
+          label='Rounds count'
+          errorMessage='Card rounds can not be empty'
         )
           TextInput(
             value=data.roundsCount
