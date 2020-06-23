@@ -1,13 +1,22 @@
 import React from 'react'
-import { observer } from 'startupjs'
-import { Text, ScrollView } from 'react-native'
+import { observer, useSession, $root, emit, useDoc } from 'startupjs'
+import { Div, Button, Span, Card } from '@startupjs/ui'
+import { BackButton } from 'components'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import './index.styl'
-import { Content } from '@startupjs/ui'
 
-export default observer(function PGame () {
+export default observer(function PGame ({ match: { params: { gameId } } }) {
+  const [userId, $userId] = useSession('userId')
+  const [game] = useDoc('games', gameId)
+console.info("__game__", game)
+
+  if(!game) return null
+
   return pug`
-    ScrollView.root
-      Content
-        Text.text Built on StartupJS
+    Div.root
+      Div.titleWrapper
+        BackButton
+        Span.title Game: #{game.name}
+
   `
 })

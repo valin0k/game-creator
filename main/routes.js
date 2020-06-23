@@ -26,7 +26,7 @@ export default (components = {}) => [
     filters: [isLoggedIn]
   },
   {
-    path: '/games/:id',
+    path: '/games/:gameId',
     exact: true,
     component: components.PGame,
     filters: [isLoggedIn]
