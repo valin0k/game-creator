@@ -4,7 +4,7 @@ import { Text, ScrollView } from 'react-native'
 import './index.styl'
 import { Content } from '@startupjs/ui'
 
-export default observer(function PAbout () {
+export default observer(function PGame () {
   return pug`
     ScrollView.root
       Content
