@@ -1,5 +1,5 @@
 import React from 'react'
-import { observer, useSession, useValue, $root } from 'startupjs'
+import { observer, useSession, useValue, $root, emit } from 'startupjs'
 import { Div, Button, TextInput, Span } from '@startupjs/ui'
 import { InputWrapper } from 'components'
 import { numberValidation, notEmptyValidation } from 'clientHelpers/validations'
@@ -49,9 +49,10 @@ export default observer(function PAddCard () {
   async function onSubmit() {
     !showErrors && $showErrors.set(true)
 
-    const a = validation()
+    if(!validation()) return
 
-
+    await $root.scope('cards').addCard(data)
+    emit('url', '/')
   }
 
   function onChangeQuestion(i, field, value) {
