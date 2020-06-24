@@ -14,20 +14,18 @@ export default class GamesModel extends BaseModel {
     return id
   }
 
-  // async join({gameId, playerId}) {
-  //   const $game = this.scope(`games.${gameId}`)
-  //   await this.root.subscribe($game)
-  //
-  //   const professorId = $game.get('profId')
-  //   const playerIds = $game.get('playerIds')
-  //
-  //   if(!playerIds.includes(playerId)) {
-  //     $game.push('playerIds', playerId)
-  //   }
-  //
-  //   return true
-  // }
+  async join({ gameId, playerId }) {
+    const $game = this.scope(`games.${gameId}`)
+    await this.root.subscribe($game)
 
+    const playerIds = $game.get('playerIds')
+
+    if(!playerIds.includes(playerId)) {
+      $game.push('playerIds', playerId)
+    }
+
+    return true
+  }
 
   async nextRound({ gameId }) {
     const $game = this.scope(`games.${gameId}`)
