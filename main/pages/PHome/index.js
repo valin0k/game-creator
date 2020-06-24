@@ -10,7 +10,7 @@ export default observer(function PHome () {
     Div.root
       Div.actions
         Button.button(onPress=() => emit('url', '/addcard')) Add a new card type
-        Button.button(onPress=() => emit('url', '/addgame')) Add a new game
+        Button.buttonGame(onPress=() => emit('url', '/addgame')) Add a new game
       Div.gameList
         GameList
         

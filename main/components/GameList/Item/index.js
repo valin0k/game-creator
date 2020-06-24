@@ -29,8 +29,7 @@ export default observer(function GameListItem ({ gameId }) {
   function getRole() {
     const roles = game.roles.length
     const players = game.playerIds.length
-
-    let roleIndex = players > roles ? players % roles : players
+    const roleIndex = players >= roles ? players % roles : players
     return game.roles[roleIndex]
   }
 
