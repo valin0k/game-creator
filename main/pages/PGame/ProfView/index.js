@@ -2,28 +2,20 @@ import React from 'react'
 import { observer, useSession, $root, emit, useDoc } from 'startupjs'
 import { Div, Button, Span, Card } from '@startupjs/ui'
 import { BackButton } from 'components'
+import { GamePlayers } from 'main/components'
 // import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import ProfView from './ProfView'
 import './index.styl'
 
-export default observer(function PGame ({ match: { params: { gameId } } }) {
+export default observer(function ProfView ({ gameId }) {
   const [userId, $userId] = useSession('userId')
   const [game] = useDoc('games', gameId)
-  const [prof] = useDoc('users', game.profId)
 
-  const isProf = userId === prof.id
-console.info("__game__", game)
+  console.info("__game__", game)
 
   if(!game) return null
 
   return pug`
     Div.root
-      Div.titleWrapper
-        BackButton
-        Span.title Game: #{game.name}
-        
-      Div.content
-        if isProf
-          ProfView(gameId=gameId)
+      GamePlayers(gameId=gameId)
   `
 })

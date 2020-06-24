@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { observer, useSession, $root, useDoc, useQueryDoc, emit } from 'startupjs'
-import { Button, Avatar, Div, Span, Card } from '@startupjs/ui'
+import { Button, Div, Span, Card } from '@startupjs/ui'
 import './index.styl'
 
 export default observer(function GameListItem ({ gameId }) {

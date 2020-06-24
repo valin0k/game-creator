@@ -22,13 +22,15 @@ export default observer(function GameList () {
     ]
   })
 
-  if(!games.length) return null
-
   return pug`
     Div.root
-      Span.title Games list
-      Div.games
-        each game, i in games
-          Item(gameId=game.id key=game.id)
+      if games.length
+        Span.title Games list
+        Div.games
+          each game, i in games
+            Item(gameId=game.id key=game.id)
+      else
+        Div.splashScreen
+          Span.title There is no games yet. Please, create a new one
   `
 })
