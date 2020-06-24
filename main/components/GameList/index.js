@@ -29,6 +29,6 @@ export default observer(function GameList () {
       Span.title Games list
       Div.games
         each game, i in games
-          Item(gameId=game.id key=game.id first=!i)
+          Item(gameId=game.id key=game.id)
   `
 })

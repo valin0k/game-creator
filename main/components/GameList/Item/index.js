@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { observer, useSession, $root, useDoc, useQueryDoc, emit } from 'startupjs'
 import { Button, Avatar, Div, Span, Card } from '@startupjs/ui'
 import './index.styl'
 
-export default observer(function GameListItem ({ gameId, first }) {
+export default observer(function GameListItem ({ gameId }) {
+  const [disableButton, setDisableButton] = useState()
   const [userId] = useSession('userId')
   const [game] = useDoc('games', gameId)
   const [isPlayer] = useQueryDoc('players', { gameId, userId })
@@ -16,11 +17,21 @@ export default observer(function GameListItem ({ gameId, first }) {
 
   async function joinGame() {
     if(!inGame) {
-      const playerId = await $root.scope('players').addPlayer({ gameId, userId })
+      setDisableButton(true)
+
+      const playerId = await $root.scope('players').addPlayer({ gameId, userId, role: getRole() })
       await $root.scope('games').join({ gameId, playerId })
     }
 
     emit('url', `/games/${gameId}`)
+  }
+
+  function getRole() {
+    const roles = game.roles.length
+    const players = game.playerIds.length
+
+    let roleIndex = players > roles ? players % roles : players
+    return game.roles[roleIndex]
   }
 
   const profName = userId === prof.id ? 'you' : prof && prof.name
@@ -35,6 +46,6 @@ export default observer(function GameListItem ({ gameId, first }) {
         Span.gameRounds Rounds: #{game.roundsCount}
         Span.gameQuestions Questions: #{game.questions.length}
       Div.actions
-        Button.createButton(onPress=joinGame)=inGame ? 'Open' : 'Join'
+        Button.createButton(onPress=joinGame disabled=disableButton)=inGame ? 'Open' : 'Join'
   `
 })

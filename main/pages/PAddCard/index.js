@@ -70,7 +70,7 @@ export default observer(function PAddCard () {
     Div.root
       Div.titleWrapper
         BackButton
-        Span.title Form for create a new card type
+        Span.title Form for create a new type of card
       Div.form
         InputWrapper(
           showError=showErrors && !notEmptyValidation(data.name)
