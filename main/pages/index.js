@@ -1,6 +1,5 @@
 export { default as PHome } from './PHome'
 export { default as PAuth } from './PAuth'
-export { default as PAbout } from './PAbout'
 export { default as PAddCard } from './PAddCard'
 export { default as PAddGame } from './PAddGame'
 export { default as PGame } from './PGame'
