@@ -11,15 +11,15 @@ export default observer(function GameList () {
 
   const [games, $games] = useQuery('games', {
     open: true,
-    $or: [
-      {
-        $nor: [
-          { playerIds: { $size: 2 } },
-        ],
-      },
-      { profId: userId },
-      { playerIds: { $in: playerIds } }
-    ]
+    // $or: [
+    //   // {
+    //   //   $nor: [
+    //   //     { playerIds: { $size: 2 } },
+    //   //   ],
+    //   // },
+    //   { profId: userId },
+    //   { playerIds: { $in: playerIds } }
+    // ]
   })
 
   return pug`
