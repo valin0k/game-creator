@@ -1,18 +1,24 @@
-import React from 'react'
-import { observer, useSession, $root, emit, useDoc } from 'startupjs'
+import React, { useEffect } from 'react'
+import {observer, useSession, $root, emit, useDoc, useQueryDoc} from 'startupjs'
 import { Div, Button, Span, Card } from '@startupjs/ui'
 import { BackButton } from 'components'
-// import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import ProfView from './ProfView'
+import PlayerView from './PlayerView'
 import './index.styl'
 
 export default observer(function PGame ({ match: { params: { gameId } } }) {
   const [userId, $userId] = useSession('userId')
   const [game] = useDoc('games', gameId)
   const [prof] = useDoc('users', game.profId)
+  const [player] = useQueryDoc('players', { userId, gameId })
 
   const isProf = userId === prof.id
-console.info("__game__", game)
+
+  useEffect(() => {
+    if(!player) {
+      emit('url', '/')
+    }
+  }, [!!player])
 
   if(!game) return null
 
@@ -25,5 +31,7 @@ console.info("__game__", game)
       Div.content
         if isProf
           ProfView(gameId=gameId)
+        else
+          PlayerView
   `
 })
