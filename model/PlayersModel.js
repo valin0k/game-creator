@@ -11,4 +11,8 @@ export default class PlayersModel extends BaseModel {
     })
     return id
   }
+
+  async removePlayer ({ playerId }) {
+    this.root.at(`players.${playerId}`).del()
+  }
 }

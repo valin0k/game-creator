@@ -1,12 +1,19 @@
 import { BaseModel } from 'startupjs/orm'
 
+export const STATUSES = {
+  opened: 'OPENED',
+  closed: 'CLOSED',
+  grouped: 'GROUPED',
+  started: 'STARTED'
+}
+
 export default class GamesModel extends BaseModel {
   async addGame(data = {}) {
     let id = this.id()
     await this.root.add(this, {
       ...data,
       createdAt: Date.now(),
-      open: true,
+      status: STATUSES.opened,
       currentRound: 1,
       playerIds: [],
       id
@@ -37,21 +44,14 @@ export default class GamesModel extends BaseModel {
 
     playerIds.splice(index, 1)
     $game.set('playerIds', playerIds)
-
   }
 
-  // async nextRound({ gameId }) {
-  //   const $game = this.scope(`games.${gameId}`)
-  //   await this.root.subscribe($game)
-  //   const currentRound = $game.get('currentRound')
-  //   $game.set('currentRound', currentRound + 1)
-  // }
-  //
-  // async finishGame({ gameId }) {
-  //   const $game = this.scope(`games.${gameId}`)
-  //   await this.root.subscribe($game)
-  //   $game.set('open', false)
-  //
-  //   return true
-  // }
+  async changeStatus({ gameId, status }) {
+    const $game = this.scope(`games.${gameId}`)
+    await this.root.subscribe($game)
+
+    $game.set('status', status)
+
+    return true
+  }
 }

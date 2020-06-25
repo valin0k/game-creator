@@ -2,6 +2,7 @@ import React from 'react'
 import { observer, useSession, useQuery } from 'startupjs'
 import { Span, Div } from '@startupjs/ui'
 import Item from './Item'
+import { STATUSES } from 'model/GamesModel'
 import './index.styl'
 
 export default observer(function GameList () {
@@ -10,7 +11,7 @@ export default observer(function GameList () {
   const playerIds = userPlayers.map(player => player.id)
 
   const [games, $games] = useQuery('games', {
-    open: true,
+    status: STATUSES.opened
     // $or: [
     //   // {
     //   //   $nor: [
