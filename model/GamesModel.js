@@ -27,18 +27,31 @@ export default class GamesModel extends BaseModel {
     return true
   }
 
-  async nextRound({ gameId }) {
+  async kickPlayer({ gameId, playerId }) {
     const $game = this.scope(`games.${gameId}`)
     await this.root.subscribe($game)
-    const currentRound = $game.get('currentRound')
-    $game.set('currentRound', currentRound + 1)
+
+    const playerIds = [...$game.get('playerIds')]
+    const index = playerIds.findIndex(id => id === playerId)
+    if(index === -1) return
+
+    playerIds.splice(index, 1)
+    $game.set('playerIds', playerIds)
+
   }
 
-  async finishGame({ gameId }) {
-    const $game = this.scope(`games.${gameId}`)
-    await this.root.subscribe($game)
-    $game.set('open', false)
-
-    return true
-  }
+  // async nextRound({ gameId }) {
+  //   const $game = this.scope(`games.${gameId}`)
+  //   await this.root.subscribe($game)
+  //   const currentRound = $game.get('currentRound')
+  //   $game.set('currentRound', currentRound + 1)
+  // }
+  //
+  // async finishGame({ gameId }) {
+  //   const $game = this.scope(`games.${gameId}`)
+  //   await this.root.subscribe($game)
+  //   $game.set('open', false)
+  //
+  //   return true
+  // }
 }
