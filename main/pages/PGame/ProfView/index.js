@@ -1,5 +1,5 @@
 import React from 'react'
-import { observer, useSession, $root, emit, useDoc } from 'startupjs'
+import { observer, useSession, $root, emit, useDoc, useValue } from 'startupjs'
 import { Div, Button, Span, Card } from '@startupjs/ui'
 import { BackButton } from 'components'
 import { GamePlayers } from 'main/components'
@@ -9,12 +9,16 @@ import './index.styl'
 export default observer(function ProfView ({ gameId }) {
   const [userId, $userId] = useSession('userId')
   const [game] = useDoc('games', gameId)
+  const [loading, $loading] = useValue()
+
   const canFordGroups = game.playerIds.length >= game.roles.length && game.status === STATUSES.opened
 
   async function onFordGroups() {
+    $loading.set(true)
     await $root.scope('games').changeStatus({ gameId, status: STATUSES.grouped })
     await removePlayersWithoutPair()
     await createGroupsWithChats()
+    $loading.set(false)
   }
 
   async function removePlayersWithoutPair() {
@@ -59,17 +63,29 @@ export default observer(function ProfView ({ gameId }) {
     console.info("__chatPromises__", chatPromises)
   }
 
+  async function onStartGame() {
+    await $root.scope('games').changeStatus({ gameId, status: STATUSES.started })
+  }
+
   if(!game) return null
 
   return pug`
     Div.root
       GamePlayers(gameId=gameId)
       Div.actions
-        Button.buttonFord(
-          color='primary' 
-          variant='flat'
-          disabled=!canFordGroups
-          onPress=onFordGroups
-        ) Ford groups
+        if game.status === STATUSES.opened
+          Button.buttonFord(
+            color='primary' 
+            variant='flat'
+            disabled=!canFordGroups || loading
+            onPress=onFordGroups
+          ) Ford groups
+        if game.status === STATUSES.grouped
+          Button.buttonStart(
+            color='primary' 
+            variant='flat'
+            disabled=loading
+            onPress=onStartGame
+          ) Play
   `
 })
