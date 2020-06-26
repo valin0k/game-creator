@@ -7,7 +7,6 @@ import './index.styl'
 export default observer(function Message ({
   messageId,
   timeFormat,
-  style,
 }) {
   const [userId] = useSession('userId')
   const [message] = useDoc('messages', messageId)
@@ -27,7 +26,7 @@ export default observer(function Message ({
       `
     default:
       return pug`
-        Row.root(style=style)
+        Row.root
           if !isMy
             Avatar.avatar(size='s')=user.name
           Div.content(styleName={hideUser: !isMy})

@@ -35,7 +35,7 @@ export default observer(function MessagesList ({
   })
 
   return pug`
-    ScrollView(
+    ScrollView.root(
       ref=scrollViewRef
       showsVerticalScrollIndicator=false
       contentContainerStyle={flexGrow: 1, flexShrink: 1}

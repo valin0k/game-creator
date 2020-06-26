@@ -24,6 +24,7 @@ console.info("__group__", group)
           Span.waitText Waiting for start
       if group
         Div.chat
+          Span.title Group chat 
           Chat(groupId=group.id playerId=player.id)
   `
 })
