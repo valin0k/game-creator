@@ -15,7 +15,7 @@ export default observer(function PGame ({ match: { params: { gameId } } }) {
   const isProf = userId === prof.id
 
   useEffect(() => {
-    if(!player) {
+    if(!player && !isProf) {
       emit('url', '/')
     }
   }, [!!player])
@@ -32,6 +32,6 @@ export default observer(function PGame ({ match: { params: { gameId } } }) {
         if isProf
           ProfView(gameId=gameId)
         else
-          PlayerView
+          PlayerView(gameId=gameId)
   `
 })
