@@ -22,7 +22,7 @@ export default observer(function MessagesList ({
   const [chat] = useQueryDoc('chats', { groupId })
   const [messages] = useBatchQuery('messages', {
     chatId: chat && chat.id,
-    $sort: {createdAt: -1},
+    $sort: {createdAt: 1},
     $limit: LIMIT,
   })
 

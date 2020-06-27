@@ -14,7 +14,7 @@ export default class GamesModel extends BaseModel {
       ...data,
       createdAt: Date.now(),
       status: STATUSES.opened,
-      currentRound: 1,
+      // currentRound: 1,
       playerIds: [],
       id
     })

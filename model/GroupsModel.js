@@ -7,7 +7,6 @@ export default class GroupsModel extends BaseModel {
       ...data,
       answers: [],
       currentAnswer: '',
-      currentAnswerAuthorId: null,
       approvedBy: [],
       createdAt: Date.now(),
       currentRound: 1,
