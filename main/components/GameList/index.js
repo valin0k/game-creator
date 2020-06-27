@@ -11,16 +11,11 @@ export default observer(function GameList () {
   const playerIds = userPlayers.map(player => player.id)
 
   const [games, $games] = useQuery('games', {
-    status: STATUSES.opened
-    // $or: [
-    //   // {
-    //   //   $nor: [
-    //   //     { playerIds: { $size: 2 } },
-    //   //   ],
-    //   // },
-    //   { profId: userId },
-    //   { playerIds: { $in: playerIds } }
-    // ]
+    $or: [
+      { status: STATUSES.opened },
+      { profId: userId },
+      { playerIds: { $in: playerIds } }
+    ]
   })
 
   return pug`

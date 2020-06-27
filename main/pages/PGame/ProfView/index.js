@@ -2,6 +2,7 @@ import React from 'react'
 import { observer, useSession, $root, emit, useDoc, useValue } from 'startupjs'
 import { Div, Button, Span, Card } from '@startupjs/ui'
 import { BackButton } from 'components'
+import chunk from 'lodash/chunk'
 import { GamePlayers } from 'main/components'
 import { STATUSES } from 'model/GamesModel'
 import './index.styl'
@@ -39,28 +40,12 @@ export default observer(function ProfView ({ gameId }) {
   async function createGroupsWithChats() {
     const rolesLength = game.roles.length
     const gamePlayers = game.playerIds.slice(0, game.playerIds.length - (game.playerIds.length % rolesLength))
-
-    const groups = gamePlayers.reduce((acc, playerId) => {
-      const lastIndex = acc.length > 1 ? acc.length - 1 : 0
-      if((acc[lastIndex] && acc[lastIndex].length) >= rolesLength) {
-        acc.push(playerId)
-      } else {
-        if(acc[lastIndex]) {
-          acc[lastIndex].push(playerId)
-        } else {
-          acc[lastIndex] = [playerId]
-        }
-      }
-      return acc
-    }, [] )
-    console.info("__groups__", groups)
+    const groups = chunk(gamePlayers, rolesLength)
 
     const groupPromises = groups.map(playerIds => $root.scope('groups').addGroup({ gameId, playerIds }))
     const groupIds = await Promise.all(groupPromises)
-    console.info("__groupIds__", groupIds)
     const chatPromises = groups.map((playerIds, i) => $root.scope('chats').addChat({ playerIds, groupId: groupIds[i] }))
     await Promise.all(chatPromises)
-    console.info("__chatPromises__", chatPromises)
   }
 
   async function onStartGame() {

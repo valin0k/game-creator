@@ -16,13 +16,12 @@ export default observer(function MessagesList ({
   groupId,
   playerId,
   style,
-  // children,
   messageTimeFormat,
 }) {
   let scrollViewRef = useRef()
   const [chat] = useQueryDoc('chats', { groupId })
   const [messages] = useBatchQuery('messages', {
-    chatId: chat.id,
+    chatId: chat && chat.id,
     $sort: {createdAt: -1},
     $limit: LIMIT,
   })
