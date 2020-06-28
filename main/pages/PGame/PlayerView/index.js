@@ -81,16 +81,14 @@ export default observer(function ProfView ({ gameId }) {
   }
 
   function submitPersonalAnswer() {
+    if(!player.currentAnswer) return
 
-  }
-
-  function submitAnswer() {
-    currentQuestion.group ? submitGroupAnswer() : submitPersonalAnswer()
-
-
-    if(currentQuestion.group) {
-
+    if(currentQuestionIndex < game.questions.length) {
+      $player.push('answers.' + currentRoundIndex, player.currentAnswer)
+    } else {
+      $player.push('answers', [player.currentAnswer])
     }
+    $player.set('currentAnswer', '')
   }
 
 console.info("__currentQuestion__", currentQuestion)
@@ -124,7 +122,7 @@ console.info("__group__", group)
                   Button.nextButton(
                     color='primary' 
                     variant='flat' 
-                    onPress=submitAnswer
+                    onPress=isGroup ? submitGroupAnswer : submitPersonalAnswer
                     disabled=answered
                   ) Next
           else
