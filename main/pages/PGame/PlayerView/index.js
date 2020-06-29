@@ -47,6 +47,16 @@ export default observer(function ProfView ({ gameId }) {
     return game.questions[currentQuestionIndex]
   }, [stringifyAnswers])
 
+  const scoresForPrevQuestion = useMemo(() => {
+    if(!answersLength) return null
+
+    const isGroup = currentQuestionIndex
+      ? game.questions[currentQuestionIndex - 1].group
+      : game.questions[game.questions.length - 1].group
+
+    return isGroup ? group.scores[group.scores.length - 1] : player.scores[player.scores.length - 1]
+  }, [stringifyAnswers])
+
   function onChangeAnswer(value) {
     if(currentQuestion.group) {
       !group.approvedBy.length && $group.set('currentAnswer', value)
@@ -132,6 +142,11 @@ export default observer(function ProfView ({ gameId }) {
           else
             Div.noQuestionsWrapper
               Span Here is no questions left
+              
+          if typeof scoresForPrevQuestion === 'number'
+            Div.scores
+              Span Scores for previous question: 
+              Span.scoresText=scoresForPrevQuestion
           
       if group
         Div.chat
