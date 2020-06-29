@@ -3,6 +3,7 @@ import { observer, useSession, $root, emit, useDoc, useQueryDoc, useValue } from
 import { Div, Button, Span, TextInput } from '@startupjs/ui'
 import { STATUSES } from 'model/GamesModel'
 import { Chat } from 'main/components'
+import { template } from 'lodash'
 import './index.styl'
 
 export default observer(function ProfView ({ gameId }) {
@@ -61,11 +62,24 @@ export default observer(function ProfView ({ gameId }) {
     }
   }
 
+  function getScores() {
+    const opts = {
+      round: currentRoundIndex,
+      groupAnswer: currentQuestion.group ? group.currentAnswer : '',
+      myAnswer: !currentQuestion.group ? player.currentAnswer : ''
+    }
+
+    return template(currentQuestion.formula)(opts)
+  }
+
   function submitGroupAnswer() {
     if(!group.currentAnswer || group.approvedBy.includes(player.id)) return
 
     if(group.approvedBy.length + 1 === group.playerIds.length) {
+      const scores = getScores()
+
       $group.push('answers', group.currentAnswer)
+      $group.push('scores', scores)
 
       $group.set('currentAnswer', '')
       $group.set('approvedBy', [])
@@ -77,6 +91,9 @@ export default observer(function ProfView ({ gameId }) {
   function submitPersonalAnswer() {
     if(!player.currentAnswer) return
 
+    const scores = getScores()
+
+    $player.push('scores', scores)
     $player.push('answers', player.currentAnswer)
     $player.set('currentAnswer', '')
   }
