@@ -14,57 +14,37 @@ export default observer(function ProfView ({ gameId }) {
   const stringifyAnswers = JSON.stringify([player.answers, group && group.answers])
 
   const answersLength = useMemo(() => {
-    const groupAnswersLength = group.answers.length ? group.answers.length - 1 : 0
-    const playerAnswersLength = player.answers.length ? player.answers.length - 1 : 0
+    if(!group) return 0
+
+    const groupAnswersLength = group.answers.length ? group.answers.length : 0
+    const playerAnswersLength = player.answers.length ? player.answers.length : 0
     return groupAnswersLength + playerAnswersLength
   }, [stringifyAnswers])
 
   const currentRoundIndex = useMemo(() => {
-    // const groupAnswersLength = group.answers.length ? group.answers.length - 1 : 0
-    // const playerAnswersLength = player.answers.length ? player.answers.length - 1 : 0
-    // const totalAnswers = groupAnswersLength + playerAnswersLength
+    if(!group) return 0
 
     const questionsThisRound = answersLength % game.questions.length
-    const roundIndex = Math.ceil(answersLength / game.questions.length)
-    return questionsThisRound ? roundIndex : roundIndex + 1
+    const roundIndex = Math.floor(answersLength / game.questions.length)
+    return questionsThisRound < game.questions.length ? roundIndex : roundIndex + 1
 
   }, [stringifyAnswers])
 
   const currentQuestionIndex = useMemo(() => {
+    if(!group) return null
+
     const answersInPrevRounds = currentRoundIndex * game.questions.length
 
     return answersLength - answersInPrevRounds
   }, [stringifyAnswers])
 
-  console.info("__answersLength__", answersLength)
-  console.info("__currentRoundIndex__", currentRoundIndex)
-  console.info("__currentQuestionIndex__", currentQuestionIndex)
+  const currentQuestion = useMemo(() => {
+    if(!group) return null
 
-  // const currentQuestionIndex = useMemo(() => {
-  //   if(!group) return 0
-  //
-  //   return Math.max(group.answers.length, player.answers.length)
-  // }, [stringifyAnswers])
-  //
-  // const currentRoundIndex = useMemo(() => {
-  //   if(!group) return 0
-  //
-  //   const groupAnswersLength = group.answers[currentQuestionIndex] ? group.answers[currentQuestionIndex].length - 1 : 0
-  //   const playerAnswersLength = player.answers[currentQuestionIndex] ? player.answers[currentQuestionIndex].length - 1 : 0
-  //   return groupAnswersLength + playerAnswersLength
-  // }, [stringifyAnswers])
-  //
-  // const currentQuestion = useMemo(() => {
-  //   if(!group || currentRoundIndex >= game.roundsCount) return null
-  //   // if(currentRoundIndex >= game.roundsCount) return null
-  //
-  //   // const groupAnswersLength = group.answers[currentRound] ? group.answers[currentRound].length - 1 : 0
-  //   // const playerAnswersLength = player.answers[currentRound] ? player.answers[currentRound].length - 1 : 0
-  //
-  //   // const questionIndex = currentQuestionIndex
-  //   // console.info("__questionIndex__", questionIndex)
-  //   return game.questions[currentQuestionIndex]
-  // }, [stringifyAnswers])
+    if(currentRoundIndex === Number(game.roundsCount)) return null
+
+    return game.questions[currentQuestionIndex]
+  }, [stringifyAnswers])
 
   function onChangeAnswer(value) {
     if(currentQuestion.group) {
@@ -81,13 +61,6 @@ export default observer(function ProfView ({ gameId }) {
     }
   }
 
-  // console.info("__currentRoundIndex__", currentRoundIndex)
-  // console.info("__currentQuestionIndex__", currentQuestionIndex)
-  // console.info("__currentQuestion__", currentQuestion)
-  console.info("________________________________", )
-
-
-
   function submitGroupAnswer() {
     if(!group.currentAnswer || group.approvedBy.includes(player.id)) return
 
@@ -101,36 +74,12 @@ export default observer(function ProfView ({ gameId }) {
     }
   }
 
-  // function submitGroupAnswer2() {
-  //   if(!group.currentAnswer) return
-  //
-  //   if(!group.approvedBy.includes(player.id)) {
-  //
-  //     // submit answer
-  //     if(group.approvedBy.length + 1 === group.playerIds.length) {
-  //       if(currentQuestionIndex < game.questions.length) {
-  //         $group.push('answers.' + currentRoundIndex, group.currentAnswer)
-  //       } else {
-  //         $group.push('answers', [group.currentAnswer])
-  //       }
-  //
-  //       $group.set('currentAnswer', '')
-  //       $group.set('approvedBy', [])
-  //     } else {
-  //       $group.push('approvedBy', player.id)
-  //     }
-  //   }
-  // }
-
   function submitPersonalAnswer() {
     if(!player.currentAnswer) return
 
     $player.push('answers', player.currentAnswer)
     $player.set('currentAnswer', '')
   }
-
-console.info("__currentQuestion__", currentQuestion)
-console.info("__group__", group)
 
   return pug`
     Div.root
@@ -144,8 +93,8 @@ console.info("__group__", group)
           
           if currentQuestion
             - const isGroup = currentQuestion.group
-            - const answered = group.approvedBy.includes(player.id)
-            - const waitForApprove = group.approvedBy.length
+            - const answered = isGroup && group.approvedBy.includes(player.id)
+            - const waitForApprove = isGroup && group.approvedBy.length
             Div.questionWrapper
               Span.questionTypeText #{isGroup ? 'Group' : 'Single'} question
               Span.questionText=currentQuestion.title
