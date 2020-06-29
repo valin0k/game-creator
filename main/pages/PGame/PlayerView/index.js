@@ -13,31 +13,58 @@ export default observer(function ProfView ({ gameId }) {
   const [group, $group] = useQueryDoc('groups', { playerIds: { $all: [player && player.id] }} )
   const stringifyAnswers = JSON.stringify([player.answers, group && group.answers])
 
-  const currentRoundIndex = useMemo(() => {
-    if(!group) return 0
-
-    return Math.max(group.answers.length, player.answers.length)
-  }, [stringifyAnswers])
-
-  const currentQuestionIndex = useMemo(() => {
-    if(!group) return 0
-
-    const groupAnswersLength = group.answers[currentRoundIndex] ? group.answers[currentRoundIndex].length - 1 : 0
-    const playerAnswersLength = player.answers[currentRoundIndex] ? player.answers[currentRoundIndex].length - 1 : 0
+  const answersLength = useMemo(() => {
+    const groupAnswersLength = group.answers.length ? group.answers.length - 1 : 0
+    const playerAnswersLength = player.answers.length ? player.answers.length - 1 : 0
     return groupAnswersLength + playerAnswersLength
   }, [stringifyAnswers])
 
-  const currentQuestion = useMemo(() => {
-    if(!group || currentRoundIndex >= game.roundsCount) return null
-    // if(currentRoundIndex >= game.roundsCount) return null
+  const currentRoundIndex = useMemo(() => {
+    // const groupAnswersLength = group.answers.length ? group.answers.length - 1 : 0
+    // const playerAnswersLength = player.answers.length ? player.answers.length - 1 : 0
+    // const totalAnswers = groupAnswersLength + playerAnswersLength
 
-    // const groupAnswersLength = group.answers[currentRound] ? group.answers[currentRound].length - 1 : 0
-    // const playerAnswersLength = player.answers[currentRound] ? player.answers[currentRound].length - 1 : 0
+    const questionsThisRound = answersLength % game.questions.length
+    const roundIndex = Math.ceil(answersLength / game.questions.length)
+    return questionsThisRound ? roundIndex : roundIndex + 1
 
-    // const questionIndex = currentQuestionIndex
-    // console.info("__questionIndex__", questionIndex)
-    return game.questions[currentQuestionIndex]
   }, [stringifyAnswers])
+
+  const currentQuestionIndex = useMemo(() => {
+    const answersInPrevRounds = currentRoundIndex * game.questions.length
+
+    return answersLength - answersInPrevRounds
+  }, [stringifyAnswers])
+
+  console.info("__answersLength__", answersLength)
+  console.info("__currentRoundIndex__", currentRoundIndex)
+  console.info("__currentQuestionIndex__", currentQuestionIndex)
+
+  // const currentQuestionIndex = useMemo(() => {
+  //   if(!group) return 0
+  //
+  //   return Math.max(group.answers.length, player.answers.length)
+  // }, [stringifyAnswers])
+  //
+  // const currentRoundIndex = useMemo(() => {
+  //   if(!group) return 0
+  //
+  //   const groupAnswersLength = group.answers[currentQuestionIndex] ? group.answers[currentQuestionIndex].length - 1 : 0
+  //   const playerAnswersLength = player.answers[currentQuestionIndex] ? player.answers[currentQuestionIndex].length - 1 : 0
+  //   return groupAnswersLength + playerAnswersLength
+  // }, [stringifyAnswers])
+  //
+  // const currentQuestion = useMemo(() => {
+  //   if(!group || currentRoundIndex >= game.roundsCount) return null
+  //   // if(currentRoundIndex >= game.roundsCount) return null
+  //
+  //   // const groupAnswersLength = group.answers[currentRound] ? group.answers[currentRound].length - 1 : 0
+  //   // const playerAnswersLength = player.answers[currentRound] ? player.answers[currentRound].length - 1 : 0
+  //
+  //   // const questionIndex = currentQuestionIndex
+  //   // console.info("__questionIndex__", questionIndex)
+  //   return game.questions[currentQuestionIndex]
+  // }, [stringifyAnswers])
 
   function onChangeAnswer(value) {
     if(currentQuestion.group) {
@@ -54,40 +81,51 @@ export default observer(function ProfView ({ gameId }) {
     }
   }
 
-  console.info("__currentRoundIndex__", currentRoundIndex)
-  console.info("__currentQuestionIndex__", currentQuestionIndex)
-  console.info("__currentQuestion__", currentQuestion)
+  // console.info("__currentRoundIndex__", currentRoundIndex)
+  // console.info("__currentQuestionIndex__", currentQuestionIndex)
+  // console.info("__currentQuestion__", currentQuestion)
   console.info("________________________________", )
 
+
+
   function submitGroupAnswer() {
-    if(!group.currentAnswer) return
+    if(!group.currentAnswer || group.approvedBy.includes(player.id)) return
 
-    if(!group.approvedBy.includes(player.id)) {
+    if(group.approvedBy.length + 1 === group.playerIds.length) {
+      $group.push('answers', group.currentAnswer)
 
-      // submit answer
-      if(group.approvedBy.length + 1 === group.playerIds.length) {
-        if(currentQuestionIndex < game.questions.length) {
-          $group.push('answers.' + currentRoundIndex, group.currentAnswer)
-        } else {
-          $group.push('answers', [group.currentAnswer])
-        }
-
-        $group.set('currentAnswer', '')
-        $group.set('approvedBy', [])
-      } else {
-        $group.push('approvedBy', player.id)
-      }
+      $group.set('currentAnswer', '')
+      $group.set('approvedBy', [])
+    } else {
+      $group.push('approvedBy', player.id)
     }
   }
+
+  // function submitGroupAnswer2() {
+  //   if(!group.currentAnswer) return
+  //
+  //   if(!group.approvedBy.includes(player.id)) {
+  //
+  //     // submit answer
+  //     if(group.approvedBy.length + 1 === group.playerIds.length) {
+  //       if(currentQuestionIndex < game.questions.length) {
+  //         $group.push('answers.' + currentRoundIndex, group.currentAnswer)
+  //       } else {
+  //         $group.push('answers', [group.currentAnswer])
+  //       }
+  //
+  //       $group.set('currentAnswer', '')
+  //       $group.set('approvedBy', [])
+  //     } else {
+  //       $group.push('approvedBy', player.id)
+  //     }
+  //   }
+  // }
 
   function submitPersonalAnswer() {
     if(!player.currentAnswer) return
 
-    if(currentQuestionIndex < game.questions.length) {
-      $player.push('answers.' + currentRoundIndex, player.currentAnswer)
-    } else {
-      $player.push('answers', [player.currentAnswer])
-    }
+    $player.push('answers', player.currentAnswer)
     $player.set('currentAnswer', '')
   }
 
