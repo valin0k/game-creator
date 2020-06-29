@@ -7,6 +7,7 @@ export default class PlayersModel extends BaseModel {
       ...data,
       createdAt: Date.now(),
       answers: [],
+      scores: [],
       id
     })
     return id

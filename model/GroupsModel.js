@@ -10,6 +10,7 @@ export default class GroupsModel extends BaseModel {
       approvedBy: [],
       createdAt: Date.now(),
       currentRound: 1,
+      scores: [],
       id
     })
     return id
