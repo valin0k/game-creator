@@ -22,6 +22,12 @@ export default observer(function ProfView ({ gameId }) {
     return groupAnswersLength + playerAnswersLength
   }, [stringifyAnswers])
 
+  const groupScores = useMemo(() => {
+    if(!group || !answersLength) return 0
+
+    return group.scores.reduce((acc, score) => acc += score, 0)
+  }, [stringifyAnswers])
+
   const currentRoundIndex = useMemo(() => {
     if(!group) return 0
 
@@ -147,6 +153,9 @@ export default observer(function ProfView ({ gameId }) {
             Div.scores
               Span Scores for previous question: 
               Span.scoresText=scoresForPrevQuestion
+            Div.groupScores
+              Span Group scores: 
+              Span.scoresText=groupScores
           
       if group
         Div.chat
