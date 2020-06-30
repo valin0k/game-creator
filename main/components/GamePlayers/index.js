@@ -29,7 +29,7 @@ export default observer(function GamePlayers ({ gameId }) {
       dataIndex: 'role',
     }
   ]
-
+console.info("__playersData__", playersData)
   return pug`
     Div.root
       if players.length

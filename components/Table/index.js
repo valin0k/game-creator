@@ -1,12 +1,13 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { observer } from 'startupjs'
 import { Icon } from '@startupjs/ui'
 import './index.styl'
 
-export default observer(function ({ dataSource, columns, align, shadow }) {
+export default observer(function ({ dataSource, columns, align, shadow, horizontal }) {
+
   return pug`
-    View.table(styleName={ shadow } style={alignSelf: align})
+    Wrapper(horizontal=horizontal)
       View.header
         each column in columns
           - const style = {width: column.width, maxWidth: column.width, ...column.headerCellStyle}
@@ -32,3 +33,18 @@ export default observer(function ({ dataSource, columns, align, shadow }) {
                 Text= record[column.dataIndex]
   `
 })
+
+const Wrapper = ({horizontal, children}) => {
+  console.info("__withScroll__", horizontal)
+  const TableWrapper = horizontal ? ScrollView : View
+  // const TableWrapper = withScroll ? pug`ScrollView.table(horizontal)` : pug`View.table`
+
+  return pug`
+    if horizontal
+      ScrollView.table(horizontal)
+        =children
+    else
+      View.table
+        =children
+  `
+}

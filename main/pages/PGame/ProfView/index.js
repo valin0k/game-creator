@@ -3,7 +3,7 @@ import { observer, useSession, $root, emit, useDoc, useValue } from 'startupjs'
 import { Div, Button, Span, Card } from '@startupjs/ui'
 import { BackButton } from 'components'
 import chunk from 'lodash/chunk'
-import { GamePlayers } from 'main/components'
+import { GamePlayers, GameResults } from 'main/components'
 import { STATUSES } from 'model/GamesModel'
 import './index.styl'
 
@@ -65,12 +65,14 @@ export default observer(function ProfView ({ gameId }) {
             disabled=!canFordGroups || loading
             onPress=onFordGroups
           ) Ford groups
-        if game.status === STATUSES.grouped
+        else if game.status === STATUSES.grouped
           Button.buttonStart(
             color='primary' 
             variant='flat'
             disabled=loading
             onPress=onStartGame
           ) Play
+        else if game.status === STATUSES.started
+          GameResults(gameId=gameId)
   `
 })
