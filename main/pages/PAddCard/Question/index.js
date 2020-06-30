@@ -33,6 +33,5 @@ export default observer(function Question ({ onChange, title, group, formula, sh
       Div.switch
         Span.label Is group question?
         Checkbox(onChange=() => onChange('group', !group) value=group)
-        
   `
 })

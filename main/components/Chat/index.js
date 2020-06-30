@@ -1,5 +1,5 @@
 import React from 'react'
-import { observer, useQueryDoc } from 'startupjs'
+import { observer } from 'startupjs'
 import { Br, Div } from '@startupjs/ui'
 import MessagesList from './MessagesList'
 import SendMessage from './SendMessage'

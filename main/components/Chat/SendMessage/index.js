@@ -1,5 +1,5 @@
 import React from 'react'
-import {observer, useValue, useQueryDoc, $root, useSession} from 'startupjs'
+import { observer, useValue, useQueryDoc, $root, useSession } from 'startupjs'
 import { Row, Button, TextInput } from '@startupjs/ui'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import './index.styl'

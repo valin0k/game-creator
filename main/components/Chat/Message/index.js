@@ -1,5 +1,5 @@
 import React from 'react'
-import {observer, useDoc, useSession} from 'startupjs'
+import { observer, useDoc, useSession } from 'startupjs'
 import { Span, Avatar, Row, Div } from '@startupjs/ui'
 import moment from 'moment'
 import './index.styl'

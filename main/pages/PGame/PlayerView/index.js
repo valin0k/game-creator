@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { observer, useSession, $root, emit, useDoc, useQueryDoc, useValue } from 'startupjs'
+import { observer, useSession, useDoc, useQueryDoc } from 'startupjs'
 import { Div, Button, Span, TextInput } from '@startupjs/ui'
 import { STATUSES } from 'model/GamesModel'
 import { Chat } from 'main/components'
@@ -10,7 +10,6 @@ export default observer(function ProfView ({ gameId }) {
   const [userId, $userId] = useSession('userId')
   const [game] = useDoc('games', gameId)
   const [player, $player] = useQueryDoc('players', { userId, gameId })
-  // const [group] = useQueryDoc('groups', { playerIds: { $elemMatch: {$in: [player.id]} } })
   const [group, $group] = useQueryDoc('groups', { playerIds: { $all: [player && player.id] }} )
   const stringifyAnswers = JSON.stringify([player.answers, group && group.answers])
 
