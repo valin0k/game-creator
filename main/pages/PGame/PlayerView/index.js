@@ -84,8 +84,10 @@ export default observer(function ProfView ({ gameId }) {
       groupAnswer: currentQuestion.group ? group.currentAnswer : '',
       myAnswer: !currentQuestion.group ? player.currentAnswer : ''
     }
+    const trimmedFormula = currentQuestion.formula.trim()
+    const formula = /^<%.+%>$/.test(trimmedFormula) ? trimmedFormula : '<%' + trimmedFormula + '%>'
 
-    return template(currentQuestion.formula)(opts)
+    return template(formula)(opts)
   }
 
   function submitGroupAnswer() {

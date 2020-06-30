@@ -7,7 +7,6 @@ import './index.styl'
 export default observer(function GameResult ({ gameId }) {
   const [userId] = useSession('userId')
   const [game] = useDoc('games', gameId)
-  console.info("__game__", game)
   const [players] = useQueryIds('players', game && game.playerIds)
 
   const userIds = useMemo(() => {
