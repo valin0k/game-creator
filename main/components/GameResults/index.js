@@ -9,19 +9,24 @@ export default observer(function GameResult ({ gameId }) {
   const [game] = useDoc('games', gameId)
   console.info("__game__", game)
   const [players] = useQueryIds('players', game && game.playerIds)
-  // const [users]
 
+  const userIds = useMemo(() => {
+    return players.map(player => player.userId)
+  }, [])
+
+  const [users] = useQueryIds('users', userIds)
   const [groups] = useQuery('groups', { gameId })
 
   const allAnswers = [...players, ...groups].map(item => item.answers)
   const stringifyAnswers = JSON.stringify(allAnswers)
-  console.info("__allAnswers__", allAnswers)
 
   const playerGroups = useMemo(() => {
     return groups.reduce((acc, group) => {
       acc.push({
         ...group,
-        players: players.filter(player => group.playerIds.includes(player.id))
+        players: players
+          .filter(player => group.playerIds.includes(player.id))
+          .map(player => ({...player, name: users.find(user => user.id === player.userId).name}))
       })
       return acc
     }, [])
@@ -60,8 +65,6 @@ export default observer(function GameResult ({ gameId }) {
 
   const data = useMemo(() => {
     const tableData = []
-    // получить тип вопроса
-    // достать нужные данные
 
     playerGroups.forEach((group, groupIndex) => {
       tableData.push(getDataItem(group, true, groupIndex))
@@ -70,29 +73,6 @@ export default observer(function GameResult ({ gameId }) {
         console.info("__player__", player)
         tableData.push(getDataItem(player, false, playerIndex))
       })
-
-
-//       let questionIndex = 0
-//       return columns.reduce((acc, col, i) => {
-//         console.info("__col.dataIndex__", col.dataIndex)
-// console.info("__i__", i)
-//         if(acc.name) {
-//           acc.name = 'Group ' + (groupIndex + 1)
-//         }
-//
-//         if(!getQuestionTypeByIndex(questionIndex)) {
-//           acc[col.dataIndex] = ''
-//           return acc
-//         }
-//
-//         if(col.dataIndex.includes('a')) {
-//           acc[col.dataIndex] = group.answers[questionIndex]
-//         } else {
-//           acc[col.dataIndex] = group.scores[questionIndex]
-//           ++questionIndex
-//         }
-//         return acc
-//       }, {})
     })
 
     return tableData
@@ -103,7 +83,7 @@ export default observer(function GameResult ({ gameId }) {
     let questionIndex = 0
 
       return columns.reduce((acc, col, i) => {
-        acc.name = isGroup ? 'Group ' + (index + 1) : 'Player'
+        acc.name = isGroup ? 'Group ' + (index + 1) : item.name
 
         if(isGroup ? !getQuestionTypeByIndex(questionIndex) : getQuestionTypeByIndex(questionIndex)) {
           acc[col.dataIndex] = ''
