@@ -80,7 +80,7 @@ export default observer(function GameResult ({ gameId }) {
     let questionIndex = 0
 
     return columns.reduce((acc, col, i) => {
-      acc.name = isGroup ? 'Group ' + (index + 1) : item.name
+      acc.name = isGroup ? pug`Span(bold) Group #{index + 1}` : item.name
 
       if(getQuestionTypeByIndex(Math.ceil(i / 2))) {
         if(isGroup) {

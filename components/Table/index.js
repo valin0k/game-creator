@@ -30,7 +30,10 @@ export default observer(function ({ dataSource, columns, align, shadow, horizont
             each column, i in columns
               - const style = {width: column.width, maxWidth: column.width, ...column.bodyCellStyle}
               View.bodyCell(key=(column.key || column.dataIndex) style=style)
-                Text= record[column.dataIndex]
+                if typeof record[column.dataIndex] === 'string'
+                  Text= record[column.dataIndex]
+                else
+                  =record[column.dataIndex]
   `
 })
 
