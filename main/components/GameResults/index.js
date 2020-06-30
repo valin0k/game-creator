@@ -116,10 +116,10 @@ console.info("__data__", data)
     }
   }
 
-console.info("__columns__", columns)
-
   return pug`
     Div.root
-      Table(columns=columns dataSource=data)
+      Span.title Game results
+      Div.table
+        Table(columns=columns dataSource=data)
   `
 })
