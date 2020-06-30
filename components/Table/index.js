@@ -35,9 +35,7 @@ export default observer(function ({ dataSource, columns, align, shadow, horizont
 })
 
 const Wrapper = ({horizontal, children}) => {
-  console.info("__withScroll__", horizontal)
   const TableWrapper = horizontal ? ScrollView : View
-  // const TableWrapper = withScroll ? pug`ScrollView.table(horizontal)` : pug`View.table`
 
   return pug`
     if horizontal

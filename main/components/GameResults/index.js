@@ -69,7 +69,6 @@ export default observer(function GameResult ({ gameId }) {
       tableData.push(getDataItem(group, true, groupIndex))
 
       group.players.forEach((player, playerIndex) => {
-        console.info("__player__", player)
         tableData.push(getDataItem(player, false, playerIndex))
       })
     })
@@ -78,25 +77,32 @@ export default observer(function GameResult ({ gameId }) {
   }, [stringifyAnswers])
 
   function getDataItem(item, isGroup, index) {
-    const dataItem = {}
     let questionIndex = 0
 
-      return columns.reduce((acc, col, i) => {
-        acc.name = isGroup ? 'Group ' + (index + 1) : item.name
+    return columns.reduce((acc, col, i) => {
+      acc.name = isGroup ? 'Group ' + (index + 1) : item.name
 
-        if(isGroup ? !getQuestionTypeByIndex(questionIndex) : getQuestionTypeByIndex(questionIndex)) {
+      if(getQuestionTypeByIndex(Math.ceil(i / 2))) {
+        if(isGroup) {
+          acc[col.dataIndex] = ''
+
+          return acc
+        }
+      } else {
+        if(!isGroup) {
           acc[col.dataIndex] = ''
           return acc
         }
+      }
 
-        if(col.dataIndex.includes('a')) {
-          acc[col.dataIndex] = item.answers[questionIndex]
-        } else {
-          acc[col.dataIndex] = item.scores[questionIndex]
-          ++questionIndex
-        }
-        return acc
-      }, {})
+      if(col.dataIndex.includes('a')) {
+        acc[col.dataIndex] = item.answers[questionIndex]
+      } else {
+        acc[col.dataIndex] = item.scores[questionIndex]
+        ++questionIndex
+      }
+      return acc
+    }, {})
   }
 
   function getQuestionTypeByIndex(i) {
