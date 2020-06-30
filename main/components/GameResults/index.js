@@ -27,7 +27,6 @@ export default observer(function GameResult ({ gameId }) {
   }, [stringifyAnswers])
 
   const maxAnswersByGroup = useMemo(() => {
-    console.info("__playerGroups__", playerGroups)
     const scoresByGroups = playerGroups.reduce((acc, group) => {
       const playersAnswers = group.players.map(player => player.answers.length)
       acc.push(group.answers.length + Math.max(...playersAnswers))
@@ -38,7 +37,11 @@ export default observer(function GameResult ({ gameId }) {
   }, [stringifyAnswers])
 
   const columns = useMemo(() => {
-    const cols = []
+    const cols = [{
+      title: 'name',
+      key: 'name',
+      dataIndex: 'name'
+    }]
 
     Array(maxAnswersByGroup).fill(1).forEach((_, i) => {
       const round = i < game.questions.length ? 1 : Math.floor(i / game.questions.length) + 1
@@ -59,10 +62,14 @@ export default observer(function GameResult ({ gameId }) {
     // получить тип вопроса
     // достать нужные данные
 
-    return playerGroups.map((group) => {
+    return playerGroups.map((group, groupIndex) => {
       let questionIndex = 0
       return columns.reduce((acc, col, i) => {
         console.info("__col.dataIndex__", col.dataIndex)
+
+        if(acc.name) {
+          acc.name = 'Group ' + (groupIndex + 1)
+        }
 
         if(!getQuestionTypeByIndex(questionIndex)) {
           acc[col.dataIndex] = ''
