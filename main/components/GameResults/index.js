@@ -9,6 +9,7 @@ export default observer(function GameResult ({ gameId }) {
   const [game] = useDoc('games', gameId)
   console.info("__game__", game)
   const [players] = useQueryIds('players', game && game.playerIds)
+  // const [users]
 
   const [groups] = useQuery('groups', { gameId })
 
@@ -62,32 +63,63 @@ export default observer(function GameResult ({ gameId }) {
     // получить тип вопроса
     // достать нужные данные
 
-    return playerGroups.map((group, groupIndex) => {
-      let questionIndex = 0
+    playerGroups.forEach((group, groupIndex) => {
+      tableData.push(getDataItem(group, true, groupIndex))
+
+      group.players.forEach((player, playerIndex) => {
+        console.info("__player__", player)
+        tableData.push(getDataItem(player, false, playerIndex))
+      })
+
+
+//       let questionIndex = 0
+//       return columns.reduce((acc, col, i) => {
+//         console.info("__col.dataIndex__", col.dataIndex)
+// console.info("__i__", i)
+//         if(acc.name) {
+//           acc.name = 'Group ' + (groupIndex + 1)
+//         }
+//
+//         if(!getQuestionTypeByIndex(questionIndex)) {
+//           acc[col.dataIndex] = ''
+//           return acc
+//         }
+//
+//         if(col.dataIndex.includes('a')) {
+//           acc[col.dataIndex] = group.answers[questionIndex]
+//         } else {
+//           acc[col.dataIndex] = group.scores[questionIndex]
+//           ++questionIndex
+//         }
+//         return acc
+//       }, {})
+    })
+
+    return tableData
+  }, [stringifyAnswers])
+
+  function getDataItem(item, isGroup, index) {
+    const dataItem = {}
+    let questionIndex = 0
+
       return columns.reduce((acc, col, i) => {
-        console.info("__col.dataIndex__", col.dataIndex)
+        acc.name = isGroup ? 'Group ' + (index + 1) : 'Player'
 
-        if(acc.name) {
-          acc.name = 'Group ' + (groupIndex + 1)
-        }
-
-        if(!getQuestionTypeByIndex(questionIndex)) {
+        if(isGroup ? !getQuestionTypeByIndex(questionIndex) : getQuestionTypeByIndex(questionIndex)) {
           acc[col.dataIndex] = ''
           return acc
         }
 
         if(col.dataIndex.includes('a')) {
-          acc[col.dataIndex] = group.answers[questionIndex]
+          acc[col.dataIndex] = item.answers[questionIndex]
         } else {
-          acc[col.dataIndex] = group.scores[questionIndex]
+          acc[col.dataIndex] = item.scores[questionIndex]
           ++questionIndex
         }
         return acc
       }, {})
-    })
+  }
 
-    // const a =
-  }, [stringifyAnswers])
 console.info("__data__", data)
   function getQuestionTypeByIndex(i) {
     if(game.questions.length > i) return game.questions[i].group
