@@ -39,8 +39,9 @@ const Wrapper = ({horizontal, children}) => {
 
   return pug`
     if horizontal
-      ScrollView.table(horizontal)
-        =children
+      ScrollView(horizontal)
+        View.table
+          =children
     else
       View.table
         =children

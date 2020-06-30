@@ -125,7 +125,7 @@ export default observer(function GameResult ({ gameId }) {
       Span.title Game results
       if columns.length > 1
         Div.table
-          Table(columns=columns dataSource=data)
+          Table(columns=columns dataSource=data horizontal)
       else
         Div.splashScreen
           Span.splashText Here is no answers yet
