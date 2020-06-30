@@ -100,7 +100,6 @@ export default observer(function GameResult ({ gameId }) {
       }, {})
   }
 
-console.info("__data__", data)
   function getQuestionTypeByIndex(i) {
     if(game.questions.length > i) return game.questions[i].group
 
@@ -119,7 +118,11 @@ console.info("__data__", data)
   return pug`
     Div.root
       Span.title Game results
-      Div.table
-        Table(columns=columns dataSource=data)
+      if columns.length > 1
+        Div.table
+          Table(columns=columns dataSource=data)
+      else
+        Div.splashScreen
+          Span.splashText Here is no answers yet
   `
 })
