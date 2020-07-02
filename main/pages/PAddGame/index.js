@@ -40,6 +40,6 @@ export default observer(function PAddGame () {
                 Button.createButton(onPress=() => onSubmit(card) disabled=disableButton) Create
       else
         Div.splashScreen
-          Span.title Here is no cards yet
+          Span.title There is no cards yet
   `
 })
