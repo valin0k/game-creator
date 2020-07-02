@@ -22,20 +22,24 @@ export default observer(function PAddGame () {
       Div.titleWrapper
         BackButton
         Span.title Choose a new game
-      Div.cards
-        each card in cards
-          - const canDelete = card.userId === userId
-          Card.card(key=card.id)
-            if canDelete
-              Div.deleteCard(
-                onPress=() => $cards.del(card.id)
-              )
-                Icon(icon=faTimes color='#de8484')
-            Span.cardTitle(styleName={canDelete})=card.name
-            Span.cardDesc=card.description
-            Span.cardRounds Rounds: #{card.roundsCount}
-            Span.cardQuestions Questions: #{card.questions.length}
-            Div.actions
-              Button.createButton(onPress=() => onSubmit(card) disabled=disableButton) Create
+      if cards.length
+        Div.cards
+          each card in cards
+            - const canDelete = card.userId === userId
+            Card.card(key=card.id)
+              if canDelete
+                Div.deleteCard(
+                  onPress=() => $cards.del(card.id)
+                )
+                  Icon(icon=faTimes color='#de8484')
+              Span.cardTitle(styleName={canDelete})=card.name
+              Span.cardDesc=card.description
+              Span.cardRounds Rounds: #{card.roundsCount}
+              Span.cardQuestions Questions: #{card.questions.length}
+              Div.actions
+                Button.createButton(onPress=() => onSubmit(card) disabled=disableButton) Create
+      else
+        Div.splashScreen
+          Span.title Here is no cards yet
   `
 })
