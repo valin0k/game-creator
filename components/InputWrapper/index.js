@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'startupjs'
-import { Div, Span, TextInput } from '@startupjs/ui'
+import { Div, Span } from '@startupjs/ui'
 import './index.styl'
 
 export default observer(function InputWrapper ({

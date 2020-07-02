@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { observer, useSession, $root, emit, useQuery } from 'startupjs'
-import { Div, Button, Span, Card } from '@startupjs/ui'
+import { Div, Button, Span, Card, Icon } from '@startupjs/ui'
 import { BackButton } from 'components'
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import './index.styl'
 
 export default observer(function PAddGame () {
   const [disableButton, setDisableButton] = useState()
   const [userId, $userId] = useSession('userId')
-  const [cards] = useQuery('cards', {name: {$exists: true}})
+  const [cards, $cards] = useQuery('cards', {name: {$exists: true}})
 
   async function onSubmit({ name, description, roundsCount, roles, questions, id }) {
     setDisableButton(true)
@@ -24,8 +24,14 @@ export default observer(function PAddGame () {
         Span.title Choose a new game
       Div.cards
         each card in cards
-          Card.card
-            Span.cardTitle=card.name
+          - const canDelete = card.userId === userId
+          Card.card(key=card.id)
+            if canDelete
+              Div.deleteCard(
+                onPress=() => $cards.del(card.id)
+              )
+                Icon(icon=faTimes color='#de8484')
+            Span.cardTitle(styleName={canDelete})=card.name
             Span.cardDesc=card.description
             Span.cardRounds Rounds: #{card.roundsCount}
             Span.cardQuestions Questions: #{card.questions.length}

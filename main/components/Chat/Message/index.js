@@ -4,10 +4,7 @@ import { Span, Avatar, Row, Div } from '@startupjs/ui'
 import moment from 'moment'
 import './index.styl'
 
-export default observer(function Message ({
-  messageId,
-  timeFormat,
-}) {
+export default observer(function Message ({ messageId, timeFormat }) {
   const [userId] = useSession('userId')
   const [message] = useDoc('messages', messageId)
   const [user] = useDoc('users', message.userId)

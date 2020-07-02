@@ -50,7 +50,7 @@ export default observer(function PAddCard () {
 
     if(!validation()) return
 
-    await $root.scope('cards').addCard(data)
+    await $root.scope('cards').addCard({ ...data, userId})
     emit('url', '/')
   }
 
