@@ -3,6 +3,7 @@ import { observer, emit, useValue, useLocal } from 'startupjs'
 import './index.styl'
 import { Row, Div, Layout, SmartSidebar, Menu, Button, H1, Span } from '@startupjs/ui'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { ScrollView } from 'react-native'
 import { displayName } from '../../app.json'
 
 const APP_NAME = displayName.charAt(0).toUpperCase() + displayName.slice(1)
@@ -36,10 +37,13 @@ export default observer(function ({ children }) {
         renderContent=renderSidebar
       )
         Row.menu
-          Button(color='secondaryText' icon=faBars onPress=() => $opened.set(!opened))
+          Button(icon=faBars onPress=() => $opened.set(!opened))
           H1.logo
-            Span.logoText(size='xl')= APP_NAME
-
-        Div.body= children
+            Span.logoText= APP_NAME
+        ScrollView.body
+          Div.contentWrapper
+            Div.content
+              Div.contentBg
+                = children
   `
 })

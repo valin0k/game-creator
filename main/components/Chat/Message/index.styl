@@ -1,0 +1,44 @@
+$avatarSize = 4u + 1u
+_primary = #eff3ff
+
+.root
+  margin-top 2u
+
+.content
+  flex-grow 1
+  flex-shrink 1
+
+  &-hideUser
+    margin-left $avatarSize
+
+.avatar
+  margin-right 1u
+
+.name
+  margin-right 1u
+
+.infoRow
+.messageRow
+  &.isMy
+    justify-content flex-end
+
+.messageRow
+  align-self flex-start
+  padding 0.5u 1u
+  border-top-right-radius 1u
+  border-bottom-right-radius 1u
+  background-color _primary
+  border-bottom-left-radius 1u
+
+  &.isMy
+    border-top-left-radius 1u
+    border-bottom-right-radius 0
+    background-color _primary
+    align-self flex-end
+
+.message
+  color #000
+
+.system
+  flex-grow 1
+  text-align center

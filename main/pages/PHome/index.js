@@ -1,14 +1,18 @@
 import React from 'react'
-import { observer } from 'startupjs'
+import { observer, emit } from 'startupjs'
 import { ScrollView } from 'react-native'
-import { TestComponent } from 'components'
+import { Content, Div, Button } from '@startupjs/ui'
+import { GameList } from 'main/components'
 import './index.styl'
-import { Content } from '@startupjs/ui'
 
 export default observer(function PHome () {
   return pug`
-    ScrollView.root
-      Content
-        TestComponent
+    Div.root
+      Div.actions
+        Button.button(onPress=() => emit('url', '/addcard')) Add a new card type
+        Button.buttonGame(onPress=() => emit('url', '/addgame')) Add a new game
+      Div.gameList
+        GameList
+        
   `
 })
